@@ -299,10 +299,99 @@ Collection version mismatch
 
 ------------------------------------------------------------------------
 
-# 2. A play fails on 5 out of 100 servers. What happens next?
+# 2. A playbook fails on 5 out of 100 servers. What happens next?
 
 What controls this behavior? - serial - max_fail_percentage -
 any_errors_fatal - strategy plugins
+
+        
+        ## Scenario
+        
+        A play runs on 100 servers and 5 fail. What happens next?
+        
+        ------------------------------------------------------------------------
+        
+        ## Default Behavior
+        
+        -   Ansible continues running on remaining hosts.
+        -   Failed hosts are marked as failed.
+        -   Play completes for successful hosts.
+        -   Final job status = FAILED (because some hosts failed).
+        -   Ansible does NOT stop by default.
+        
+        ------------------------------------------------------------------------
+        
+        ## What Controls Failure Behavior?
+        
+        ### 1. serial
+        
+        Controls batch size.
+        
+        Example:
+        
+            serial: 10
+        
+        -   Runs 10 hosts at a time.
+        -   Enables rolling deployments.
+        
+        ------------------------------------------------------------------------
+        
+        ### 2. max_fail_percentage
+        
+        Controls how many failures are tolerated before stopping.
+        
+        Example:
+        
+            max_fail_percentage: 20
+        
+        -   If failures exceed 20% of the batch → play stops.
+        -   Works per batch when serial is used.
+        
+        ------------------------------------------------------------------------
+        
+        ### 3. any_errors_fatal
+        
+        Stops everything immediately if any host fails.
+        
+        Example:
+        
+            any_errors_fatal: true
+        
+        -   Even 1 failure → entire play stops.
+        
+        ------------------------------------------------------------------------
+        
+        ### 4. strategy
+        
+        Controls execution model.
+        
+        Default:
+        
+            strategy: linear
+        
+        -   All hosts execute tasks in lock-step.
+        
+        Alternative:
+        
+            strategy: free
+        
+        -   Hosts run independently.
+        -   Faster but less controlled.
+        
+        ------------------------------------------------------------------------
+        
+        ## Practical Example
+        
+            - hosts: all
+              serial: 20
+              max_fail_percentage: 25
+        
+        -   20 hosts per batch.
+        -   If more than 5 fail in a batch → play stops.
+        -   Safe rolling deployment pattern.
+        
+        ------------------------------------------------------------------------
+
 
 ------------------------------------------------------------------------
 
