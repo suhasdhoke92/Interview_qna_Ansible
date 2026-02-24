@@ -219,6 +219,7 @@ It can encrypt:
 
 Basic commands:
 
+    ansible-vault create file.yml --vault-password-file ~/.vault_pass
     ansible-vault encrypt secrets.yml
     ansible-vault decrypt secrets.yml
     ansible-vault edit secrets.yml
