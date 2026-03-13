@@ -530,3 +530,263 @@ cases, and production decisions --- they have real operational exposure.
 
 If answers are generic or theoretical, they likely lack hands-on
 experience.
+----------------------- moderate level ----------------------------------- 
+# Ansible Moderate-Level Interview Questions
+
+This document contains practical Ansible interview questions designed to
+assess whether a candidate has real hands-on experience with Ansible
+automation. The questions focus on real-world scenarios such as
+idempotency, variable precedence, loops, debugging, and playbook
+structure.
+
+------------------------------------------------------------------------
+
+## 1. Variable Precedence
+
+**Question**
+
+If a variable `app_port` is defined in multiple places:
+
+-   `group_vars/all.yml`
+-   `group_vars/web.yml`
+-   inside the playbook under `vars`
+-   passed through CLI using `-e app_port=9090`
+
+Which value will Ansible use when the playbook runs? Explain why.
+
+**What to look for**
+
+Candidate should understand variable precedence and mention that extra
+variables (`-e`) override all other variables.
+
+------------------------------------------------------------------------
+
+## 2. Idempotency in Ansible
+
+**Question**
+
+Suppose you have the following task:
+
+``` yaml
+- name: Add port configuration
+  shell: echo "port=8080" >> /etc/app.conf
+```
+
+If the playbook runs multiple times, the configuration line keeps
+getting appended again.
+
+-   Why is this considered bad practice in Ansible?
+-   How would you rewrite this task to make it idempotent?
+
+**What to look for**
+
+Candidate should explain idempotency and suggest modules like:
+
+-   `lineinfile`
+-   `template`
+-   `copy`
+
+------------------------------------------------------------------------
+
+## 3. Handling Task Failures
+
+**Question**
+
+During playbook execution, one task fails but you still want the
+remaining tasks to continue executing.
+
+What approaches can you use in Ansible to handle this situation?
+
+**What to look for**
+
+Possible answers:
+
+-   `ignore_errors: yes`
+-   `block` and `rescue`
+-   structured error handling patterns
+
+------------------------------------------------------------------------
+
+## 4. Looping Over a Dictionary
+
+**Question**
+
+You have the following variable:
+
+``` yaml
+users:
+  john: dev
+  mary: ops
+  sam: qa
+```
+
+How would you write an Ansible task that creates these users and assigns
+them to their respective groups?
+
+**What to look for**
+
+Candidate should know about:
+
+-   looping over dictionaries
+-   `dict2items` filter
+
+------------------------------------------------------------------------
+
+## 5. Using Register and Conditions
+
+**Question**
+
+You want to check whether Java is installed on a server.
+
+If Java is not installed, the playbook should install it.\
+How would you implement this logic in Ansible?
+
+**What to look for**
+
+Candidate should use:
+
+-   `register`
+-   checking return code (`rc`)
+-   `when` condition
+
+------------------------------------------------------------------------
+
+## 6. Understanding Handlers
+
+**Question**
+
+When updating a configuration file, you may need to restart the service.
+
+Why would you use a handler instead of adding a normal restart task
+immediately after the configuration change?
+
+**What to look for**
+
+Candidate should explain:
+
+-   handlers run only when notified
+-   handlers run once even if multiple tasks trigger them
+
+------------------------------------------------------------------------
+
+## 7. Delegating Tasks
+
+**Question**
+
+You are configuring multiple application servers, but you need to update
+the load balancer configuration only once from the control node.
+
+How would you implement this in Ansible?
+
+**What to look for**
+
+Candidate should mention:
+
+-   `delegate_to`
+-   `run_once`
+
+------------------------------------------------------------------------
+
+## 8. Using Ansible Facts
+
+**Question**
+
+How would you install the correct web server package depending on the
+operating system?
+
+For example:
+
+-   `httpd` for RedHat-based systems
+-   `apache2` for Debian-based systems.
+
+**What to look for**
+
+Candidate should reference:
+
+-   `ansible_facts`
+-   `ansible_os_family`
+-   conditional logic
+
+------------------------------------------------------------------------
+
+## 9. Ansible Role Structure
+
+**Question**
+
+If you create an Ansible role, what is the typical directory structure
+of that role?
+
+**Expected structure**
+
+    roles/
+      nginx/
+        tasks/
+        handlers/
+        templates/
+        files/
+        defaults/
+        vars/
+        meta/
+
+Understanding the difference between `defaults` and `vars` indicates
+deeper experience.
+
+------------------------------------------------------------------------
+
+## 10. Template File Troubleshooting
+
+**Question**
+
+Suppose you run the following task:
+
+``` yaml
+- name: Copy configuration template
+  template:
+    src: app.j2
+    dest: /etc/app.conf
+```
+
+But Ansible throws an error saying:
+
+    template not found
+
+Where does Ansible look for the template file by default?
+
+**What to look for**
+
+Candidate should mention:
+
+-   `templates/` directory in a role
+-   relative playbook paths
+
+------------------------------------------------------------------------
+
+## Bonus Question (Advanced Understanding)
+
+**Question**
+
+What is the difference between:
+
+-   `import_tasks`
+-   `include_tasks`
+
+**What to look for**
+
+Candidate should understand the difference between static and dynamic
+task loading.
+
+  Feature           import_tasks            include_tasks
+  ----------------- ----------------------- ------------------------------
+  Loading type      Static                  Dynamic
+  Processing time   Playbook parsing time   Runtime
+  Use case          Predictable tasks       Conditional or dynamic tasks
+
+------------------------------------------------------------------------
+
+## Interview Usage Note
+
+These questions are designed to test practical experience rather than
+theoretical knowledge. Candidates who have worked with Ansible in
+real-world environments should be comfortable explaining these scenarios
+and demonstrating them with examples.
+
