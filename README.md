@@ -530,7 +530,11 @@ cases, and production decisions --- they have real operational exposure.
 
 If answers are generic or theoretical, they likely lack hands-on
 experience.
------------------------ moderate level ----------------------------------- 
+
+
+
+------------------------------------------------------------------------ 
+
 # Ansible Moderate-Level Interview Questions
 
 This document contains practical Ansible interview questions designed to
